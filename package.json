@@ -9,7 +9,10 @@
   "author": "Zachary Donato <zdonato@stevens.edu>",
   "license": "ISC",
   "dependencies": {
+    "jsonfile": "^2.4.0",
     "nodemailer": "^2.6.4",
+    "sleep": "^4.0.0",
+    "timestamp-util": "^1.0.3",
     "twitter": "^1.4.0"
   }
 }

@@ -1,6 +1,9 @@
 var Twitter = require('twitter');
 var nodemailer = require('nodemailer');
 var emailInfo = require('./emailInfo');
+var sleep = require('sleep');
+var jsonfile = require('jsonfile');
+var timestamp = require('timestamp-util');
 
 var client = new Twitter({
     consumer_key: 'LHVDDFkFlqY5rKeFJFieTFXXX',
@@ -43,36 +46,46 @@ var getTweets = (screen_name, keywords) => {
         });
     });
 };
-
-getTweets("grimmales",["soon", "release", "tickets", "rainbow dome", "new", "tapped"])
-    .then( (tweets) => {
-        var mailOptions = {
-            from: 'Zacharydonato.com <zdonatowebsiteform@gmail.com>',
-            to: 'd3a4gf7@gmail.com',
-            subject: "Here's the tweets you requested",
-            text: ''
-        };
-
-        tweets.forEach( (tweet) => {
-
-            var link = "https://twitter.com/GrimmAles/status/" + tweet.id;
-
-            var params = {
-                id: tweet.id,
-                trim_user: true
+setInterval( () => {
+    getTweets("grimmales",["soon", "release", "tickets", "rainbow dome", "new", "tapped"])
+        .then( (tweets) => {
+            var mailOptions = {
+                from: 'Zacharydonato.com <zdonatowebsiteform@gmail.com>',
+                to: 'd3a4gf7@gmail.com',
+                subject: "Here's the tweets you requested!",
+                text: ''
             };
 
-            mailOptions.text += tweet.text + "\n" + link + "\n\n";
-        });
+            var storage = jsonfile.readFileSync('./tweets.json');
 
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.error(error);
+            tweets.forEach( (tweet) => {
+
+                if (storage.indexOf(tweet.id) === -1) {
+                    // Tweet hasn't been seen yet.
+                    var link = "https://twitter.com/GrimmAles/status/" + tweet.id;
+                    mailOptions.text += tweet.text + "\n" + link + "\n\n";
+
+                    // Add tweet to storage.
+                    storage.push(tweet.id);
+                }
+            });
+
+            // Resave the json.
+            jsonfile.writeFileSync('./tweets.json', storage);
+
+            if (mailOptions.text.trim().length !== 0) {
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) {
+                        timestamp(error);
+                    } else {
+                        timestamp("Tweets have been sent");
+                    }
+                });
             } else {
-                console.log(info);
+                timestamp("No tweets to send");
             }
+        })
+        .catch( (error) => {
+            console.log(error);
         });
-    })
-    .catch( (error) => {
-        console.log(error);
-    });
+    }, 300000);
