@@ -1,0 +1,15 @@
+{
+  "name": "tweetbot",
+  "version": "1.0.0",
+  "description": "Tweet bot to watch GrimmAles",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Zachary Donato <zdonato@stevens.edu>",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^2.6.4",
+    "twitter": "^1.4.0"
+  }
+}
