@@ -1,7 +1,6 @@
 var Twitter = require('twitter');
 var nodemailer = require('nodemailer');
 var emailInfo = require('./emailInfo');
-var sleep = require('sleep');
 var jsonfile = require('jsonfile');
 var timestamp = require('timestamp-util');
 
@@ -47,22 +46,22 @@ var getTweets = (screen_name, keywords) => {
     });
 };
 setInterval( () => {
-    getTweets("grimmales",["soon", "release", "tickets", "rainbow dome", "new", "tapped"])
+    getTweets("NJTRANSIT_NBUS", ["bus route no. 116"])
         .then( (tweets) => {
             var mailOptions = {
                 from: 'Zacharydonato.com <zdonatowebsiteform@gmail.com>',
-                to: 'd3a4gf7@gmail.com',
-                subject: "Here's the tweets you requested!",
+                to: 'zacharyadonato@gmail.com',
+                subject: "NJ TRANSIT 119 TWEET",
                 text: ''
             };
 
-            var storage = jsonfile.readFileSync('./tweets.json');
+            var storage = jsonfile.readFileSync('./tweets-njt.json');
 
             tweets.forEach( (tweet) => {
 
                 if (storage.indexOf(tweet.id) === -1) {
                     // Tweet hasn't been seen yet.
-                    var link = "https://twitter.com/GrimmAles/status/" + tweet.id;
+                    var link = "https://twitter.com/NJTRANSIT_NBUS/status/" + tweet.id;
                     mailOptions.text += tweet.text + "\n" + link + "\n\n";
 
                     // Add tweet to storage.
@@ -71,7 +70,7 @@ setInterval( () => {
             });
 
             // Resave the json.
-            jsonfile.writeFileSync('./tweets.json', storage);
+            jsonfile.writeFileSync('./tweets-njt.json', storage);
 
             if (mailOptions.text.trim().length !== 0) {
                 transporter.sendMail(mailOptions, (error, info) => {
@@ -84,8 +83,8 @@ setInterval( () => {
             } else {
                 timestamp("No tweets to send");
             }
-        })
-        .catch( (error) => {
+        }).catch( (error) => {
             console.log(error);
         });
-    }, 300000);
+
+    }, 180000);
