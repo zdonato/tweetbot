@@ -50,7 +50,7 @@ setInterval( () => {
         .then( (tweets) => {
             var mailOptions = {
                 from: 'Zacharydonato.com <zdonatowebsiteform@gmail.com>',
-                to: 'zacharyadonato@gmail.com',
+                to: ['zacharyadonato@gmail.com', 'amfarnham18@gmail.com'],
                 subject: "NJ TRANSIT 119 TWEET",
                 text: ''
             };
