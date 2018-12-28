@@ -46,7 +46,7 @@ var getTweets = (screen_name, keywords) => {
     });
 };
 setInterval( () => {
-    getTweets("NJTRANSIT_NBUS", ["bus route no. 116"])
+    getTweets("NJTRANSIT_NBUS", ["bus route no. 119"])
         .then( (tweets) => {
             var mailOptions = {
                 from: 'Zacharydonato.com <zdonatowebsiteform@gmail.com>',
